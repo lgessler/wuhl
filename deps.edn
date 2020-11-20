@@ -1,0 +1,22 @@
+{:deps    {org.clojure/clojure        {:mvn/version "1.10.1"}
+           org.clojure/spec.alpha     {:mvn/version "0.2.187"}
+
+
+           ;; frontend -------------------------------------------------------------------------------
+           ;; fulcro and fulcro-related deps
+           com.fulcrologic/fulcro     {:mvn/version "3.4.3"
+                                       :exclusions  [com.cognitect/transit-cljs
+                                                     com.cognitect/transit-js]}
+           com.cognitect/transit-cljs {:mvn/version "0.8.264"}
+           com.fulcrologic/guardrails {:mvn/version "0.0.12"}
+
+           ;; routing-related
+           metosin/reitit             {:mvn/version "0.5.2"}
+           clj-commons/pushy          {:mvn/version "0.3.10"}}
+
+ :paths ["src"]
+
+ :aliases {:dev {:extra-deps {org.clojure/clojurescript {:mvn/version "1.10.773"}
+                              org.clojure/test.check    {:mvn/version "1.0.0"}
+                              thheller/shadow-cljs      {:mvn/version "2.11.7"}
+                              binaryage/devtools        {:mvn/version "1.0.2"}}}}}

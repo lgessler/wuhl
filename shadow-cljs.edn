@@ -1,0 +1,21 @@
+;; shadow-cljs configuration
+{:deps         {:aliases [:dev]}
+
+ ;; set an nrepl port for connection to a REPL.
+ :nrepl        {:port 9000}
+
+ :builds       {:app {:target     :browser
+                      :output-dir "resources/public/js/compiled"
+                      :asset-path "/js/compiled"
+
+                      :modules    {:main
+                                   {:entries [wuhl.core]}}
+                      :dev        {:compiler-options {:external-config {:guardrails {}
+                                                                        :fulcro     {:wrap-inputs? false}}}}
+
+                      :devtools   {:before-load wuhl.core/init
+                                   :after-load  wuhl.core/refresh
+                                   :http-root   "resources/public"
+                                   :http-port   8700
+                                   :preloads    [com.fulcrologic.fulcro.inspect.preload
+                                                 devtools.preload]}}}}
