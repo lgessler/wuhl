@@ -12,9 +12,12 @@
 
            ;; routing-related
            metosin/reitit             {:mvn/version "0.5.2"}
-           clj-commons/pushy          {:mvn/version "0.3.10"}}
+           clj-commons/pushy          {:mvn/version "0.3.10"}
 
- :paths ["src"]
+           ;;i18n
+           com.taoensso/tempura       {:mvn/version "1.2.1"}}
+
+ :paths   ["src"]
 
  :aliases {:dev {:extra-deps {org.clojure/clojurescript {:mvn/version "1.10.773"}
                               org.clojure/test.check    {:mvn/version "1.0.0"}

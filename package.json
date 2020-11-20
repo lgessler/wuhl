@@ -9,7 +9,8 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56"
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "react-papaparse": "^3.11.0"
   },
   "devDependencies": {
     "react": "^16.14.0",

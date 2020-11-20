@@ -329,7 +329,7 @@
 
 ;; theme
 (def default-theme (createMuiTheme #js {:spacing 8
-                                        :palette #js {:primary   purple
+                                        #_#_:palette #js {:primary   purple
                                                       :secondary blue}}))
 (def theme-provider (interop/react-factory ThemeProvider))
 
