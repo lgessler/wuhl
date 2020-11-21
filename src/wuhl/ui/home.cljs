@@ -6,7 +6,8 @@
             [wuhl.material-ui-icon :as muic]
             [wuhl.router :as r]
             [wuhl.i18n :refer [tr lipsum]]
-            [wuhl.ui.step.upload :refer [ui-step-upload StepUpload]]))
+            [wuhl.ui.step.upload :as step-upload :refer [ui-step-upload StepUpload]]
+            [wuhl.ui.step.column-config :as step-column-config :refer [ui-step-column-config StepColumnConfig]]))
 
 ;; At a high level: user will upload data and go through some steps configuring it
 ;; The data will be stored in the :data root key of the state atom
@@ -15,20 +16,28 @@
 
 (defmutation reset-steps [_]
   (action [{:keys [state]}]
-          (swap! state #(assoc-in % (conj ident :active-step) 0))
-          (swap! state dissoc :data)))
+    (swap! state #(assoc-in % (conj ident :active-step) 0))
+    (swap! state dissoc :data)
+    (swap! state #(assoc-in % step-upload/ident (c/get-initial-state StepUpload)))
+    (swap! state #(assoc-in % step-column-config/ident (c/get-initial-state StepColumnConfig)))
+    ))
 
 (defsc Home [this {:keys [active-step
-                          step-upload] :as props}]
+                          step-upload
+                          step-column-config] :as props}]
   {:query         [:active-step
-                   {:step-upload (c/get-query StepUpload)}]
+                   {:step-upload (c/get-query StepUpload)}
+                   {:step-column-config (c/get-query StepColumnConfig)}]
    :ident         (fn [] ident)
-   :initial-state (fn [_] {:active-step 0
-                           :step-upload (c/get-initial-state StepUpload)})
+   :initial-state (fn [_] {:active-step        0
+                           :step-upload        (c/get-initial-state StepUpload)
+                           :step-column-config (c/get-initial-state StepColumnConfig)})
    :route-segment (r/last-route-segment :home)}
 
-  (let [advance #(m/set-integer! this :active-step (inc active-step))
-        reset #(c/transact! this [(reset-steps {})])]
+  (let [next-step #(m/set-value! this :active-step (inc active-step))
+        last-step #(m/set-value! this :active-step (dec active-step))
+        reset #(when (js/confirm (tr "Are you sure you want to start over?"))
+                 (c/transact! this [(reset-steps {})]))]
     (mui/page-container {:style {:maxWidth "800px"}}
       (c/fragment
         (mui/stepper {:activeStep  active-step
@@ -37,12 +46,12 @@
             (mui/step-label {} (tr "Upload Tabular Data"))
             (mui/step-content {}
               (ui-step-upload
-                (c/computed step-upload {:advance advance :reset reset}))))
+                (c/computed step-upload {:next-step next-step :reset reset}))))
           (mui/step {:key 1}
             (mui/step-label {} (tr "Configure Columns"))
             (mui/step-content {}
-              (ui-step-upload
-                (c/computed step-upload {:advance advance :reset reset}))))
+              (ui-step-column-config
+                (c/computed step-column-config {:next-step next-step :last-step last-step :reset reset}))))
 
           )))))
 

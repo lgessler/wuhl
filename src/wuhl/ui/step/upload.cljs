@@ -21,7 +21,7 @@
   (clojure.string/join "\n" (for [{:keys [type message row]} (sort :row errors)]
                               (str "Row " row ": " type ": " message))))
 
-(defmutation handle-upload [{:keys [contents name advance]}]
+(defmutation handle-upload [{:keys [contents name next-step]}]
   (action [{:keys [state component] :as env}]
           (let [{:keys [data errors meta] :as parsed} (parse-csv contents)]
 
@@ -32,12 +32,12 @@
                 (m/set-value! component :message {:body (str name " loaded successfully")
                                                   :type :success})
                 (swap! state assoc :data parsed)
-                (advance)))
+                (next-step)))
             )
           (m/set-value! component :busy false)))
 
 
-(defsc StepUpload [this {:keys [data busy message] :as props} {:keys [advance reset]}]
+(defsc StepUpload [this {:keys [data busy message] :as props} {:keys [next-step reset]}]
   {:query         [[:data '_] :busy :message]
    :ident         (fn [] ident)
    :initial-state (fn [_] {:busy false})}
@@ -82,18 +82,19 @@
                                           (let [contents (-> e .-target .-result)]
                                             (m/set-value! this :message nil)
                                             (m/set-value! this :busy true)
-                                            (c/transact! this [(handle-upload {:contents contents
-                                                                               :name     name
-                                                                               :advance  advance})])
+                                            (c/transact! this [(handle-upload {:contents  contents
+                                                                               :name      name
+                                                                               :next-step next-step})])
                                             (js/console.log :submitted))))
                                   (.readAsText reader file)))}))
 
       )
 
     (mui/card-actions {}
-                      (common/action-div
-                        {:next  (common/next-button {:onClick  advance
-                                                     :disabled (or busy (not (some? data)))})
-                         :reset (common/reset-button {:disabled busy})}))))
+      (common/action-div
+        {:next  (common/next-button {:onClick  next-step
+                                     :disabled (or busy (not (some? data)))})
+         :reset (common/reset-button {:disabled (or busy (not (some? data)))
+                                      :onClick  reset})}))))
 
 (def ui-step-upload (c/factory StepUpload))

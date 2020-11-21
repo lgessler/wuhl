@@ -15,7 +15,7 @@
     (tr "Back")))
 
 (defn reset-button [props]
-  (mui/button (merge {:variant "outlined"}
+  (mui/button (merge {:variant "text"}
                      props)
     (tr "Reset")))
 
