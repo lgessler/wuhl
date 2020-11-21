@@ -16,7 +16,7 @@
 (defmutation reset-steps [_]
   (action [{:keys [state]}]
           (swap! state #(assoc-in % (conj ident :active-step) 0))
-          (swap! state :data dissoc)))
+          (swap! state dissoc :data)))
 
 (defsc Home [this {:keys [active-step
                           step-upload] :as props}]

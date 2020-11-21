@@ -96,18 +96,6 @@
     prop-types "^15.7.2"
     react-is "^16.8.0"
 
-"@types/node@*":
-  version "14.14.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.9.tgz#04afc9a25c6ff93da14deabd65dc44485b53c8d6"
-  integrity sha512-JsoLXFppG62tWTklIoO4knA+oDTYsmqWxHRvd4lpmfQRNhX6osheUOWETP2jMoV/2bEHuMra8Pp3Dmo/stBFcw==
-
-"@types/papaparse@^5.0.4":
-  version "5.2.4"
-  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.2.4.tgz#6aa662b08df84fd1dc34db37860005e9127457f3"
-  integrity sha512-oxwvNgW/RwtGsU/TOlV1zwBfozuyav0BotfCt0mX83nk87tePauU7N7shjI7uCBaPTEVip/F6XLfvs+Bk8M5HQ==
-  dependencies:
-    "@types/node" "*"
-
 "@types/prop-types@*":
   version "15.7.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
@@ -640,7 +628,7 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
-papaparse@^5.2.0:
+papaparse@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.3.0.tgz#ab1702feb96e79ab4309652f36db9536563ad05a"
   integrity sha512-Lb7jN/4bTpiuGPrYy4tkKoUS8sTki8zacB5ke1p5zolhcSE4TlWgrlsxjrDTbG/dFVh07ck7X36hUf/b5V68pg==
@@ -757,14 +745,6 @@ react-is@^16.7.0, react-is@^16.8.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
-
-react-papaparse@^3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/react-papaparse/-/react-papaparse-3.11.0.tgz#dc545e1fff9c24d9c0d98a85b86fb90ba31cef85"
-  integrity sha512-H4xd6J0eE8E7/xvXZKEXusAGEiw9qUo+Xlp4/ykA1WxHTj7zIgad38FtqFS4+RTYtE9PVC4rsjcThUbZO8LDQA==
-  dependencies:
-    "@types/papaparse" "^5.0.4"
-    papaparse "^5.2.0"
 
 react-transition-group@^4.4.0:
   version "4.4.1"

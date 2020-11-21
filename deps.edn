@@ -1,8 +1,6 @@
 {:deps    {org.clojure/clojure        {:mvn/version "1.10.1"}
            org.clojure/spec.alpha     {:mvn/version "0.2.187"}
 
-
-           ;; frontend -------------------------------------------------------------------------------
            ;; fulcro and fulcro-related deps
            com.fulcrologic/fulcro     {:mvn/version "3.4.3"
                                        :exclusions  [com.cognitect/transit-cljs
@@ -14,8 +12,11 @@
            metosin/reitit             {:mvn/version "0.5.2"}
            clj-commons/pushy          {:mvn/version "0.3.10"}
 
-           ;;i18n
-           com.taoensso/tempura       {:mvn/version "1.2.1"}}
+           ;; i18n
+           com.taoensso/tempura       {:mvn/version "1.2.1"}
+           ;; for mui
+           camel-snake-kebab          {:mvn/version "0.4.2"}
+           }
 
  :paths   ["src"]
 

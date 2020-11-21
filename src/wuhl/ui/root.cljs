@@ -9,7 +9,7 @@
             [wuhl.material-ui-icon :as muic]
             [wuhl.ui.drawer :refer [ui-drawer Drawer]]
             [wuhl.ui.home :refer [Home]]
-            [wuhl.ui.common.core :refer [loader]]
+            [wuhl.ui.common :refer [loader]]
             ))
 
 
