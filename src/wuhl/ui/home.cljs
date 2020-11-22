@@ -18,6 +18,7 @@
   (action [{:keys [state]}]
     (swap! state #(assoc-in % (conj ident :active-step) 0))
     (swap! state dissoc :data)
+    (swap! state dissoc :column/id)
     (swap! state #(assoc-in % step-upload/ident (c/get-initial-state StepUpload)))
     (swap! state #(assoc-in % step-column-config/ident (c/get-initial-state StepColumnConfig)))
     ))
@@ -38,20 +39,27 @@
         last-step #(m/set-value! this :active-step (dec active-step))
         reset #(when (js/confirm (tr "Are you sure you want to start over?"))
                  (c/transact! this [(reset-steps {})]))]
-    (mui/page-container {:style {:maxWidth "800px"}}
+    (mui/page-container {:style {:maxWidth "1000px"}}
       (c/fragment
         (mui/stepper {:activeStep  active-step
-                      :orientation "vertical"}
+                      :orientation "horizontal"}
           (mui/step {:key 0}
-            (mui/step-label {} (tr "Upload Tabular Data"))
-            (mui/step-content {}
-              (ui-step-upload
-                (c/computed step-upload {:next-step next-step :reset reset}))))
+            (mui/step-label {} (tr "Upload Tabular Data")))
           (mui/step {:key 1}
-            (mui/step-label {} (tr "Configure Columns"))
-            (mui/step-content {}
-              (ui-step-column-config
-                (c/computed step-column-config {:next-step next-step :last-step last-step :reset reset}))))
-
-          )))))
+            (mui/step-label {} (tr "Configure Columns")))
+          (mui/step {:key 2}
+            (mui/step-label {} (tr "Language Information")))
+          (mui/step {:key 3}
+            (mui/step-label {} (tr "Download Zip"))))
+        (dom/div {:style (if (not= active-step 0) {:display "none"} {})}
+          (ui-step-upload
+            (c/computed step-upload {:next-step next-step :reset reset})))
+        (dom/div {:style (if (not= active-step 1) {:display "none"} {})}
+          (ui-step-column-config
+            (c/computed step-column-config {:next-step next-step :last-step last-step :reset reset})))
+        (dom/div {:style (if (not= active-step 2) {:display "none"} {})}
+          "NYI")
+        (dom/div {:style (if (not= active-step 3) {:display "none"} {})}
+          "NYI")
+        ))))
 
