@@ -43,7 +43,6 @@
     :alternate-forms
     :blocks #{:lexcat :senses #{:body :comments}}
     }
-  (println grouped-configs)
   (let [get-keys (fn [column-type grouped-configs]
                    (->> grouped-configs column-type (map :column/id) (map keyword)))
         gather-unique (fn [column-type grouped-configs rows]
