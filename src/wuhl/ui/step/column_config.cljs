@@ -38,23 +38,34 @@
 (def ui-column (c/factory Column))
 
 ;; preview component --------------------------------------------------------------------------------
-(defn render-ast [{:keys [form definitions]}]
+(defn render-ast [{:keys [primary-form alternate-forms blocks]}]
   (mui/card {}
-    (mui/card-header {:title form}
-      (mui/typography {:variant "h6" :component "h2"} form))
+    (mui/card-header {:title primary-form})
     (mui/card-content {}
-      (dom/ul {}
-        (map #(dom/li {}
-                (mui/typography {:variant "body1"} %))
-             definitions)))))
+      (when (not-empty alternate-forms)
+        (c/fragment
+          (mui/typography {:variant "h6"} (tr "Alternate Forms"))
+          (dom/ul {}
+            (map #(dom/li {}
+                    (mui/typography {:variant "body1"} %))
+                 alternate-forms))))
+      (for [{:keys [senses primary-lexcat lexcats]} blocks]
+        (c/fragment
+          (mui/typography {:variant "h6"} (if primary-lexcat
+                                            (-> primary-lexcat
+                                                (cond-> (not-empty lexcats) (str " (" (clojure.string/join ", " lexcats) ")")))
+                                            (tr "Definition")))
+          (dom/ul
+            (map (fn [{:keys [body comments]}]
+                   (dom/li {:key body} (cond-> body (not-empty comments) (str " (" (clojure.string/join ", " comments) ")"))))
+                 senses)))))))
 
 (defn preview [component column-configs rows]
   (let [types (set (map :column/type column-configs))]
     (c/fragment
-      (dom/hr)
       (mui/typography {:variant "h5" :component "h1"} "Preview")
-      (if-not (clojure.set/subset? wc/required-types types)
-        (mui/typography {:variant "body1"} (tr "Please designate at least one Primary Form and Definition column"))
+      (if-let [error (wc/explain-config-error column-configs)]
+        (mui/typography {:variant "body1"} error)
         ;; todo: let user select somehow
         (let [ast (first (wc/generate-ast column-configs rows))]
           (render-ast ast))))))
@@ -69,20 +80,23 @@
 
   ;; explanation
   (let []
-    (js/console.log (pr-str columns))
-    (js/console.log (pr-str data))
     (c/fragment
       (mui/typography {:variant "h5" :component "h1"} "Column Configuration")
       (dom/p (tr lipsum))
       (mui/container {}
-        (mui/grid {:container true :spacing 3}
-          (mui/grid {:container true :item true}
-            (mui/grid {:item true :sm 4 :key "cname"} (mui/typography {:variant "h6"} (tr "Column Name")))
-            (mui/grid {:item true :sm 4 :key "ctype"} (mui/typography {:variant "h6"} (tr "Column Type")))
-            (mui/grid {:item true :sm 4 :key "copts"} (mui/typography {:variant "h6"} (tr "Column Options"))))
-          (map ui-column columns)))
-
-      (preview this columns (:data data))
+        (mui/grid {:container true}
+          (mui/grid {:item true :container true :md 8 :key "main"}
+            (mui/grid {:container true :spacing 3}
+              (mui/grid {:container true :item true}
+                (mui/grid {:item true :sm 4 :key "cname"} (mui/typography {:variant "h6"} (tr "Column Name")))
+                (mui/grid {:item true :sm 4 :key "ctype"} (mui/typography {:variant "h6"} (tr "Column Type")))
+                (mui/grid {:item true :sm 4 :key "copts"} (mui/typography {:variant "h6"} (tr "Column Options"))))
+              (map ui-column columns)))
+          (mui/grid {:item true :md 4 :key "sidebar"}
+            (preview this columns (:data data))
+            )
+          )
+        )
 
       (common/action-div
         {:back  (common/back-button {:onClick last-step})

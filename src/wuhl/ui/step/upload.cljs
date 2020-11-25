@@ -30,8 +30,12 @@
           (let [{:keys [data errors meta] :as parsed} (parse-csv contents)]
 
             (if (> (count errors) 0)
-              (m/set-value! component :message {:body (format-error-message errors)
-                                                :type :error})
+              (do
+                (m/set-value! component :message {:body (format-error-message errors)
+                                                  :type :error})
+                (js/setTimeout (fn []
+                                 (m/set-value! component :busy false))
+                               500))
               (let [columns (->> (:fields meta)
                                  (map (fn [id] {:column/id id :column/type wc/default-type}))
                                  vec)]
@@ -42,9 +46,10 @@
                 ;; merge our columns into the database rooted on the :columns prop of StepColumnConfig
                 (merge/merge-component! SPA StepColumnConfig
                                         {:columns columns})
-                (next-step)))
-            )
-          (js/setTimeout #(m/set-value! component :busy false) 1500)))
+                (js/setTimeout (fn []
+                                 (m/set-value! component :busy false)
+                                 (next-step))
+                               1500))))))
 
 
 (defsc StepUpload [this {:keys [data busy message] :as props} {:keys [next-step reset]}]
@@ -85,6 +90,7 @@
                              (let [file (-> e .-target .-files (aget 0))
                                    name (.-name file)
                                    reader (js/FileReader.)]
+                               (reset)
                                (set! (.-onload reader)
                                      (fn [e]
                                        (let [contents (-> e .-target .-result)]
@@ -93,7 +99,8 @@
                                          (c/transact! this [(handle-upload {:contents  contents
                                                                             :name      name
                                                                             :next-step next-step})]))))
-                               (.readAsText reader file)))}))
+                               (.readAsText reader file)
+                               (set! (-> e .-target .-value) nil)))}))
 
     (common/action-div
       {:next  (common/next-button {:onClick  next-step

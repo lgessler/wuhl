@@ -37,8 +37,8 @@
 
   (let [next-step #(m/set-value! this :active-step (inc active-step))
         last-step #(m/set-value! this :active-step (dec active-step))
-        reset #(when (js/confirm (tr "Are you sure you want to start over?"))
-                 (c/transact! this [(reset-steps {})]))]
+        reset #(c/transact! this [(reset-steps {})])
+        step-div-style (fn [active-step i] (if (not= active-step i) {:display "none"} {}))]
     (mui/page-container {:style {:maxWidth "1000px"}}
       (c/fragment
         (mui/stepper {:activeStep  active-step
@@ -51,15 +51,15 @@
             (mui/step-label {} (tr "Language Information")))
           (mui/step {:key 3}
             (mui/step-label {} (tr "Download Zip"))))
-        (dom/div {:style (if (not= active-step 0) {:display "none"} {})}
+        (dom/div {:style (step-div-style active-step 0)}
           (ui-step-upload
             (c/computed step-upload {:next-step next-step :reset reset})))
-        (dom/div {:style (if (not= active-step 1) {:display "none"} {})}
+        (dom/div {:style (step-div-style active-step 1)}
           (ui-step-column-config
             (c/computed step-column-config {:next-step next-step :last-step last-step :reset reset})))
-        (dom/div {:style (if (not= active-step 2) {:display "none"} {})}
+        (dom/div {:style (step-div-style active-step 2)}
           "NYI")
-        (dom/div {:style (if (not= active-step 3) {:display "none"} {})}
+        (dom/div {:style (step-div-style active-step 3)}
           "NYI")
         ))))
 

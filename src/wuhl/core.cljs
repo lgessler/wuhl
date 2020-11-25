@@ -8,7 +8,7 @@
 (defn ^:export refresh []
   (println "Hot code Remount")
   (comp/refresh-dynamic-queries! SPA)
-  (app/mount! SPA FulcroRoot "app"))
+  #_(app/mount! SPA FulcroRoot "app"))
 
 (defn ^:export init []
   (println "Application starting.")
